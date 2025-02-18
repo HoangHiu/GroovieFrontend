@@ -1,7 +1,7 @@
 import Navbar from "./Navbar.tsx";
 
 import loginIcon from "../../assets/images/nav/login.svg";
-import SmallBtn from "../common/SmallBtn.tsx";
+import SmallBtn from "../common/NavBtn.tsx";
 import Logo from "../ui/Logo.tsx";
 
 function Sidebar(){

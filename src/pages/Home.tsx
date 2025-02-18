@@ -5,9 +5,11 @@ import Player from "../components/layout/Player.tsx";
 function Home(){
     return (
         <>
-            <Sidebar></Sidebar>
-            <MainContent></MainContent>
-            <Player></Player>
+            <div className="">
+                {/*<Sidebar></Sidebar>*/}
+                {/*<MainContent></MainContent>*/}
+                <Player></Player>
+            </div>
         </>
     )
 }
