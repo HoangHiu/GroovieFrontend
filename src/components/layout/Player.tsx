@@ -111,10 +111,6 @@ function Player(){
                 <section>
                     <SoundCardHoriz title={"This is a really long song name"} authorName={"Author name"}></SoundCardHoriz>
                 </section>
-
-                <section>
-
-                </section>
             </div>
         </>
     );

@@ -16,7 +16,7 @@ function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
     };
 
     return(
-        <div className={"flex w-[350px] gap-3 border-4 border-indigo-500"}>
+        <div className={"flex w-[350px] gap-3"}>
             <img style={{width: getWidth()}} src={(albumImg) ? albumImg : imgPlaceholder}/>
             <div className={"w-[200px] flex flex-col items-start"}>
                 <h1 className={"font-bold " +
