@@ -1,16 +1,17 @@
 interface propsContext{
-    icon: string
+    icon: string,
+    onClick?: () => void;
 }
 
-function PlayerBtn({icon}: propsContext){
+function PlayerBtn({icon, onClick}: propsContext){
     return(
         <>
-            <button
+            <button onClick={onClick}
                 style={{padding: "8px"}}
                 className={"hover:bg-[var(--color-ic-seconday-1)] hover:cursor-pointer focus:outline-none focus:shadow-outline" +
                     "transition duration-300 ease-in-out" +
                     "border rounded-lg"}>
-                <img src={icon} alt=""/>
+                <img className={"min-w-[24px]"} src={icon} alt=""/>
             </button>
         </>
     )

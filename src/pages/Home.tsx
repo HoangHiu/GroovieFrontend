@@ -6,7 +6,7 @@ function Home(){
     return (
         <>
             <div className="">
-                {/*<Sidebar></Sidebar>*/}
+                <Sidebar></Sidebar>
                 {/*<MainContent></MainContent>*/}
                 <Player></Player>
             </div>
