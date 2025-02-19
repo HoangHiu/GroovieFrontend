@@ -7,7 +7,7 @@ import Logo from "../ui/Logo.tsx";
 function Sidebar(){
     return (
         <>
-            <div className="inline-flex flex-col gap-6">
+            <div className="w-fit h-full flex flex-col gap-3">
                 <Logo></Logo>
                 <Navbar></Navbar>
                 <SmallBtn icon={loginIcon}></SmallBtn>

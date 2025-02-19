@@ -69,6 +69,7 @@ function Player(){
                  className="p-8 flex items-center w-full bg-[var(--color-bg-primary-2)] h-[60px] rounded-lg
                  border-3 border-[var(--color-bas-primary-2)]
                  gap-8
+                 col-span-2
                  ">
 
                 <audio ref={audioRef}
