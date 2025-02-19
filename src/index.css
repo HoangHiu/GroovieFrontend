@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -5,53 +7,57 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --color-bg-primary-1: oklch(0% 0.0102 35.18);
+  --color-bg-primary-2: oklch(17.7% 0.0146 35.18);
+  --color-ic-primary-1: oklch(23.8% 0.0474 35.18);
+  --color-ic-primary-2: oklch(28.3% 0.0758 35.18);
+  --color-ic-primary-3: oklch(32.7% 0.0846 35.18);
+  --color-bas-primary-1: oklch(37.8% 0.0866 35.18);
+  --color-bas-primary-2: oklch(44.6% 0.093 35.18);
+  --color-bas-primary-3: oklch(53.7% 0.1133 35.18);
+  --color-sc-primary-1: oklch(67.8% 0.1559 35.18);
+  --color-sc-primary-2: oklch(64% 0.1559 35.18);
+  --color-at-primary-1: oklch(78.4% 0.1424 35.18);
+  --color-at-primary-2: oklch(89.9% 0.0406 35.18);
+
+  --color-bg-seconday-1: oklch(0% 0 none);
+  --color-bg-seconday-2: oklch(18.5% 0 none);
+  --color-ic-seconday-1: oklch(24% 0 none);
+  --color-ic-seconday-2: oklch(27.7% 0 none);
+  --color-ic-seconday-3: oklch(31% 0 none);
+  --color-bas-seconday-1: oklch(34.8% 0 none);
+  --color-bas-seconday-2: oklch(40% 0 none);
+  --color-bas-seconday-3: oklch(49.1% 0 none);
+  --color-sc-seconday-1: oklch(54% 0 none);
+  --color-sc-seconday-2: oklch(58.6% 0 none);
+  --color-at-seconday-1: oklch(77% 0 none);
+  --color-at-seconday-2: oklch(94.9% 0 none);
+
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+*{
+  padding: 0;
+  box-sizing: border-box;
+  margin: 0;
 }
-a:hover {
-  color: #535bf2;
+
+#root{
+  width: 100%;
+  height: 100%;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  width: 100vw;
+  height: 100vh;
+  padding: 30px;
 }
 
 @media (prefers-color-scheme: light) {
