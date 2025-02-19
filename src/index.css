@@ -40,6 +40,27 @@
   --color-at-seconday-1: oklch(77% 0 none);
   --color-at-seconday-2: oklch(94.9% 0 none);
 
+  /* width */
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 4px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
 }
 
 *{
@@ -57,18 +78,5 @@ body {
   margin: 0;
   width: 100vw;
   height: 100vh;
-  padding: 30px;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  padding: 20px;
 }
