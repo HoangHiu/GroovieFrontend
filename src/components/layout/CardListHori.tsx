@@ -1,19 +1,19 @@
 import BigCardVerti from "../ui/BigCardVerti.tsx";
 import { useState, useEffect } from "react";
+import axios from "axios";
+
 
 class CardItem {
     id: string;
     name: string;
     cover: string;
     artistName: string;
-    type: string;
 
-    constructor(id: string, name: string, cover: string, artistName: string, type: string) {
+    constructor(id: string, name: string, cover: string, artistName: string) {
         this.id = id;
         this.name = name;
         this.cover = cover;
         this.artistName = artistName;
-        this.type = type;
     }
 }
 
@@ -24,26 +24,21 @@ interface propsContext{
 }
 
 function CardListHori(props: propsContext) {
-    const [cardList, setCardList] = useState<CardItem[]>([
-        new CardItem("1", "Shape of You", "shape-of-you.jpg", "Ed Sheeran", "album"),
-        new CardItem("2", "Blinding Lights", "blinding-lights.jpg", "The Weeknd", "single"),
-        new CardItem("3", "Someone Like You", "someone-like-you.jpg", "Adele", "album"),
-        new CardItem("4", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-        new CardItem("5", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
-        new CardItem("6", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-        new CardItem("7", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
+    const [cardList, setCardList] = useState<CardItem[]>([]);
 
-    ]);
-
-    // useEffect(() => {
-    //     // setCardList([
-    //     //     new CardItem("1", "Shape of You", "shape-of-you.jpg", "Ed Sheeran", "album"),
-    //     //     new CardItem("2", "Blinding Lights", "blinding-lights.jpg", "The Weeknd", "single"),
-    //     //     new CardItem("3", "Someone Like You", "someone-like-you.jpg", "Adele", "album"),
-    //     //     new CardItem("4", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-    //     //     new CardItem("5", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
-    //     // ]);
-    // }, []);
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: 'http://localhost:8080/v1/album?page_number=0&page_size=100',
+            headers: {
+                 Authorization: 'Bearer ' +
+                    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3Mzk5Mzc3NjAsImV4cCI6MTc0MDA0NTc2MH0.2BzI29m1wthO3qGC_-nYVnUa8s8I22wvFLGg-HOEjF6cuX1LvuMTk93g7Ndpo2ftz6yOmqj7hxKprUQ12q5Kng'
+            }
+        })
+            .then(function(response){
+                setCardList(response.data.data.content.map(i => new CardItem(i.uuid, i.title, "cover", "artist")))
+            })
+    }, []);
 
 
     return(
