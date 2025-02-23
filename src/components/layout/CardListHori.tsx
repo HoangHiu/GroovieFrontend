@@ -1,57 +1,89 @@
 import BigCardVerti from "../ui/BigCardVerti.tsx";
 import { useState, useEffect } from "react";
+import axios from "axios";
+
 
 class CardItem {
     id: string;
     name: string;
     cover: string;
+    artistId: string;
     artistName: string;
-    type: string;
 
-    constructor(id: string, name: string, cover: string, artistName: string, type: string) {
+    constructor(id: string, name: string, cover: string, artistId: string, artistName: string) {
         this.id = id;
         this.name = name;
         this.cover = cover;
+        this.artistId = artistId;
         this.artistName = artistName;
-        this.type = type;
     }
 }
 
 interface propsContext{
     cardContentType: string;
     header: string;
-    contentUrl: string;
+    apiUrl: string;
 }
 
 function CardListHori(props: propsContext) {
-    const [cardList, setCardList] = useState<CardItem[]>([
-        new CardItem("1", "Shape of You", "shape-of-you.jpg", "Ed Sheeran", "album"),
-        new CardItem("2", "Blinding Lights", "blinding-lights.jpg", "The Weeknd", "single"),
-        new CardItem("3", "Someone Like You", "someone-like-you.jpg", "Adele", "album"),
-        new CardItem("4", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-        new CardItem("5", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
-        new CardItem("6", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-        new CardItem("7", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
+    const [cardList, setCardList] = useState<CardItem[]>([]);
 
-    ]);
+    const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
 
-    // useEffect(() => {
-    //     // setCardList([
-    //     //     new CardItem("1", "Shape of You", "shape-of-you.jpg", "Ed Sheeran", "album"),
-    //     //     new CardItem("2", "Blinding Lights", "blinding-lights.jpg", "The Weeknd", "single"),
-    //     //     new CardItem("3", "Someone Like You", "someone-like-you.jpg", "Adele", "album"),
-    //     //     new CardItem("4", "Uptown Funk", "uptown-funk.jpg", "Bruno Mars", "single"),
-    //     //     new CardItem("5", "Bohemian Rhapsody", "bohemian-rhapsody.jpg", "Queen", "album"),
-    //     // ]);
-    // }, []);
+    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3NDAyOTU0MjksImV4cCI6MTc0MDQwMzQyOX0.DQZ7wKbJBrKh_Q_VaG8PVlETsEvPcrF7Lm2g_H5ahjXlbF8tcm_VU48eYdkOO1Mvmj96yPkSQC8KldkreZFjwA"
 
+    useEffect(() => {
+            axios({
+                method: "get",
+                url: getAllUrl,
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            })
+                .then((response) => {
+                    return response.data.data.content
+                })
+                .then((callResult) => {
+                    setCardItems(callResult, props.cardContentType)
+                })
+
+    }, [cardList]);
+
+    function setCardItems(callResult, cardContentType: string){
+        switch (cardContentType) {
+            case "album":
+                setCardList(callResult.map(it => new CardItem(
+                    it.uuid,
+                    it.title,
+                    it.url,
+                    it.userDtoOut.uuid,
+                    it.userDtoOut.personalDetailDtoOut.name
+                )))
+                break
+            case "artist":
+                setCardList(callResult.map(it => new CardItem(
+                    it.uuid,
+                    it.title,
+                    it.url,
+                    it.userDtoOut.uuid,
+                    it.userDtoOut.personalDetailDtoOut.name
+                )))
+                break
+        }
+    }
 
     return(
         <div style={{padding: "0 20px"}}>
             <h1 style={{paddingBottom: "15px"}} className={"text-3xl font-bold"}>{props.header}</h1>
             <div className={"max-w-full flex overflow-x-auto"}>
-                {cardList.map(c => <BigCardVerti key={c.id} itemId={c.id} itemName={c.name} itemCover={c.cover}
-                                                 itemType={props.cardContentType} itemArtistName={c.artistName}></BigCardVerti>)}
+                {cardList.map(c => <BigCardVerti
+                    key={c.id}
+                    itemId={c.id}
+                    itemName={c.name}
+                    itemCover={c.cover}
+                    itemType={props.cardContentType}
+                    itemArtistName={c.artistName}></BigCardVerti>
+                )}
             </div>
         </div>
     )
