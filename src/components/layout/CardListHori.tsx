@@ -7,12 +7,14 @@ class CardItem {
     id: string;
     name: string;
     cover: string;
+    artistId: string;
     artistName: string;
 
-    constructor(id: string, name: string, cover: string, artistName: string) {
+    constructor(id: string, name: string, cover: string, artistId: string, artistName: string) {
         this.id = id;
         this.name = name;
         this.cover = cover;
+        this.artistId = artistId;
         this.artistName = artistName;
     }
 }
@@ -20,33 +22,68 @@ class CardItem {
 interface propsContext{
     cardContentType: string;
     header: string;
-    contentUrl: string;
+    apiUrl: string;
 }
 
 function CardListHori(props: propsContext) {
     const [cardList, setCardList] = useState<CardItem[]>([]);
 
-    useEffect(() => {
-        axios({
-            method: 'get',
-            url: 'http://localhost:8080/v1/album?page_number=0&page_size=100',
-            headers: {
-                 Authorization: 'Bearer ' +
-                    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3Mzk5Mzc3NjAsImV4cCI6MTc0MDA0NTc2MH0.2BzI29m1wthO3qGC_-nYVnUa8s8I22wvFLGg-HOEjF6cuX1LvuMTk93g7Ndpo2ftz6yOmqj7hxKprUQ12q5Kng'
-            }
-        })
-            .then(function(response){
-                setCardList(response.data.data.content.map(i => new CardItem(i.uuid, i.title, "cover", "artist")))
-            })
-    }, []);
+    const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
 
+    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3NDAyOTU0MjksImV4cCI6MTc0MDQwMzQyOX0.DQZ7wKbJBrKh_Q_VaG8PVlETsEvPcrF7Lm2g_H5ahjXlbF8tcm_VU48eYdkOO1Mvmj96yPkSQC8KldkreZFjwA"
+
+    useEffect(() => {
+            axios({
+                method: "get",
+                url: getAllUrl,
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                }
+            })
+                .then((response) => {
+                    return response.data.data.content
+                })
+                .then((callResult) => {
+                    setCardItems(callResult, props.cardContentType)
+                })
+
+    }, [cardList]);
+
+    function setCardItems(callResult, cardContentType: string){
+        switch (cardContentType) {
+            case "album":
+                setCardList(callResult.map(it => new CardItem(
+                    it.uuid,
+                    it.title,
+                    it.url,
+                    it.userDtoOut.uuid,
+                    it.userDtoOut.personalDetailDtoOut.name
+                )))
+                break
+            case "artist":
+                setCardList(callResult.map(it => new CardItem(
+                    it.uuid,
+                    it.title,
+                    it.url,
+                    it.userDtoOut.uuid,
+                    it.userDtoOut.personalDetailDtoOut.name
+                )))
+                break
+        }
+    }
 
     return(
         <div style={{padding: "0 20px"}}>
             <h1 style={{paddingBottom: "15px"}} className={"text-3xl font-bold"}>{props.header}</h1>
             <div className={"max-w-full flex overflow-x-auto"}>
-                {cardList.map(c => <BigCardVerti key={c.id} itemId={c.id} itemName={c.name} itemCover={c.cover}
-                                                 itemType={props.cardContentType} itemArtistName={c.artistName}></BigCardVerti>)}
+                {cardList.map(c => <BigCardVerti
+                    key={c.id}
+                    itemId={c.id}
+                    itemName={c.name}
+                    itemCover={c.cover}
+                    itemType={props.cardContentType}
+                    itemArtistName={c.artistName}></BigCardVerti>
+                )}
             </div>
         </div>
     )
