@@ -7,7 +7,7 @@ interface propsContext{
     width?: string,
 }
 
-function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
+function SongCardHoriz({albumImg, title, authorName, width} : propsContext){
     const getWidth = (): string => {
         if(width){
             return width;
@@ -28,5 +28,5 @@ function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
     )
 }
 
-export default SoundCardHoriz;
+export default SongCardHoriz;
 

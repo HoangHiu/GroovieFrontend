@@ -11,7 +11,7 @@ import styles from "./Player.module.css";
 
 import PlayerBtn from "../common/PlayerBtn.tsx";
 import {useEffect, useRef, useState} from "react";
-import SoundCardHoriz from "../ui/SongCardHoriz.tsx";
+import SongCardHoriz from "../ui/SongCardHoriz.tsx";
 
 
 function Player(){
@@ -109,7 +109,7 @@ function Player(){
                 </section>
 
                 <section>
-                    <SoundCardHoriz title={"This is a really long song name"} authorName={"Author name"}></SoundCardHoriz>
+                    <SongCardHoriz title={"This is a really long song name"} authorName={"Author name"}></SongCardHoriz>
                 </section>
             </div>
         </>
