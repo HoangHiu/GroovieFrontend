@@ -30,7 +30,7 @@ function CardListHori(props: propsContext) {
 
     const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
 
-    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3NDAyOTU0MjksImV4cCI6MTc0MDQwMzQyOX0.DQZ7wKbJBrKh_Q_VaG8PVlETsEvPcrF7Lm2g_H5ahjXlbF8tcm_VU48eYdkOO1Mvmj96yPkSQC8KldkreZFjwA"
+    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3NDA1NTg3NDgsImV4cCI6MTc0MDY2Njc0OH0.9mCa2C3xws49ludPakflOstVs4_QAJ3ON_K1JaFv0SbcEfBRHQGpQQNXtsPtTJr391q2F8BFAEf5ltRVCHiUvA"
 
     useEffect(() => {
             axios({
@@ -47,7 +47,7 @@ function CardListHori(props: propsContext) {
                     setCardItems(callResult, props.cardContentType)
                 })
 
-    }, [cardList]);
+    }, [cardList, authToken]);
 
     function setCardItems(callResult, cardContentType: string){
         switch (cardContentType) {
