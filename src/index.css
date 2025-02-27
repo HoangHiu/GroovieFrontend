@@ -15,17 +15,17 @@
   -moz-osx-font-smoothing: grayscale;
 
   --color-bg-primary-1: oklch(0% 0.0102 35.18);
-  --color-bg-primary-2: oklch(17.7% 0.0146 35.18);
-  --color-ic-primary-1: oklch(23.8% 0.0474 35.18);
-  --color-ic-primary-2: oklch(28.3% 0.0758 35.18);
-  --color-ic-primary-3: oklch(32.7% 0.0846 35.18);
-  --color-bas-primary-1: oklch(37.8% 0.0866 35.18);
-  --color-bas-primary-2: oklch(44.6% 0.093 35.18);
-  --color-bas-primary-3: oklch(53.7% 0.1133 35.18);
-  --color-sc-primary-1: oklch(67.8% 0.1559 35.18);
-  --color-sc-primary-2: oklch(64% 0.1559 35.18);
-  --color-at-primary-1: oklch(78.4% 0.1424 35.18);
-  --color-at-primary-2: oklch(89.9% 0.0406 35.18);
+  --color-bg-primary-2: oklch(18.1% 0.0472 304);
+  --color-ic-primary-1: oklch(25.1% 0.0923 304);
+  --color-ic-primary-2: oklch(30% 0.1242 304);
+  --color-ic-primary-3: oklch(34% 0.1371 304);
+  --color-bas-primary-1: oklch(38.5% 0.1452 304);
+  --color-bas-primary-2: oklch(44.8% 0.162 304);
+  --color-bas-primary-3: oklch(54% 0.1994 304);
+  --color-sc-primary-1: oklch(62.7% 0.265 304);
+  --color-sc-primary-2: oklch(58.6% 0.265 304);
+  --color-at-primary-1: oklch(78.5% 0.2345 304);
+  --color-at-primary-2: oklch(91.1% 0.0729 304);
 
   --color-bg-seconday-1: oklch(0% 0 none);
   --color-bg-seconday-2: oklch(18.5% 0 none);
