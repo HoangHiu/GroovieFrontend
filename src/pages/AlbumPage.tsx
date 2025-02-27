@@ -17,7 +17,6 @@ function AlbumPage() {
     const { id } = useParams();
 
     return (
-        <div className="h-full grid grid-rows-[1fr_auto] grid-cols-[auto_minmax(0,1fr)] gap-4">
             <AlbumContent
                 albumId={id!}
                 onSelectSong={(index, playlist) => {
@@ -26,7 +25,6 @@ function AlbumPage() {
                 }}
                 currentSongIndex={currentSongIndex}
             />
-        </div>
     );
 }
 
