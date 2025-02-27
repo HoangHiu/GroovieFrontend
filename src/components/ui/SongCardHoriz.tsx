@@ -5,6 +5,7 @@ interface propsContext{
     title: string,
     authorName: string,
     width?: string,
+    onHover?: boolean
 }
 
 function SongCardHoriz({albumImg, title, authorName, width} : propsContext){
@@ -16,7 +17,8 @@ function SongCardHoriz({albumImg, title, authorName, width} : propsContext){
     };
 
     return(
-        <div className={"flex w-[350px] gap-3"}>
+        <div
+            className={"flex w-[350px] gap-3"}>
             <img style={{width: getWidth()}} src={(albumImg) ? albumImg : imgPlaceholder}/>
             <div className={"w-[200px] flex flex-col items-start"}>
                 <h1 className={"font-bold " +

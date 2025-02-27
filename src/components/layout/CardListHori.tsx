@@ -30,7 +30,7 @@ function CardListHori(props: propsContext) {
 
     const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
 
-    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1QWRtaW4iLCJpYXQiOjE3NDA1NTg3NDgsImV4cCI6MTc0MDY2Njc0OH0.9mCa2C3xws49ludPakflOstVs4_QAJ3ON_K1JaFv0SbcEfBRHQGpQQNXtsPtTJr391q2F8BFAEf5ltRVCHiUvA"
+    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1UmVndWxhck5ldyIsImlhdCI6MTc0MDYzMDI3NSwiZXhwIjoxNzQwNzM4Mjc1fQ.guZt3AYjNV0Fcpn5-3WVBLJZaIAhJ4ig1LTC9_mU1OMvLObuW5Taw57v1jf-pUxaqsEmdMyHcgxXmzx59PrW9Q"
 
     useEffect(() => {
             axios({
