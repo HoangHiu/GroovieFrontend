@@ -5,9 +5,10 @@ interface propsContext{
     title: string,
     authorName: string,
     width?: string,
+    onHover?: boolean
 }
 
-function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
+function SongCardHoriz({albumImg, title, authorName, width} : propsContext){
     const getWidth = (): string => {
         if(width){
             return width;
@@ -16,7 +17,8 @@ function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
     };
 
     return(
-        <div className={"flex w-[350px] gap-3"}>
+        <div
+            className={"flex w-[350px] gap-3"}>
             <img style={{width: getWidth()}} src={(albumImg) ? albumImg : imgPlaceholder}/>
             <div className={"w-[200px] flex flex-col items-start"}>
                 <h1 className={"font-bold " +
@@ -28,5 +30,5 @@ function SoundCardHoriz({albumImg, title, authorName, width} : propsContext){
     )
 }
 
-export default SoundCardHoriz;
+export default SongCardHoriz;
 
