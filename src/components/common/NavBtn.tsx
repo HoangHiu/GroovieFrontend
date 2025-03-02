@@ -11,25 +11,15 @@ function NavBtn ({ icon, width= "60px", height="60px", onClick = () => {}}: prop
     const initBackground: string = "var(--color-ic-seconday-1)";
     const highlightBackground: string = "var(--color-sc-primary-1)";
 
-    const [currentBtnColor, setCurrentBtnColor] = useState(initBackground)
     const btnRef  = useRef<HTMLButtonElement | null>(null);
 
-    function handleOnMouseEnter(){
-        setCurrentBtnColor((prevColor) =>
-            prevColor === initBackground ? highlightBackground : initBackground)
-    }
-
-    function handleOnMouseLeave(){
-        setCurrentBtnColor((prevColor) =>
-            prevColor === highlightBackground ? initBackground : highlightBackground)
-    }
-
     return<button onClick={onClick} ref={btnRef}
-                  onMouseEnter={handleOnMouseEnter}
-                  onMouseLeave={handleOnMouseLeave}
-                  className="flex items-center justify-center rounded-lg gap-4"
-                  style={{height, width, backgroundColor: currentBtnColor}}>
-        <img src={icon} alt=""/>
+                  className="flex items-center justify-center rounded-lg gap-4
+                  bg-[var(--color-ic-seconday-1)]
+                  hover:bg-[var(--color-sc-primary-1)] hover:cursor-pointer
+                  transition delay-0 duration-300"
+                  style={{height, width}}>
+        <img className={"w-[35px]"} src={icon} alt=""/>
     </button>
 }
 

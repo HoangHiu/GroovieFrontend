@@ -30,15 +30,10 @@ function CardListHori(props: propsContext) {
 
     const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
 
-    const authToken : string = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1UmVndWxhck5ldyIsImlhdCI6MTc0MDYzMDI3NSwiZXhwIjoxNzQwNzM4Mjc1fQ.guZt3AYjNV0Fcpn5-3WVBLJZaIAhJ4ig1LTC9_mU1OMvLObuW5Taw57v1jf-pUxaqsEmdMyHcgxXmzx59PrW9Q"
-
     useEffect(() => {
             axios({
                 method: "get",
                 url: getAllUrl,
-                headers: {
-                    Authorization: `Bearer ${authToken}`
-                }
             })
                 .then((response) => {
                     return response.data.data.content
@@ -47,7 +42,7 @@ function CardListHori(props: propsContext) {
                     setCardItems(callResult, props.cardContentType)
                 })
 
-    }, [cardList, authToken]);
+    }, [cardList]);
 
     function setCardItems(callResult, cardContentType: string){
         switch (cardContentType) {

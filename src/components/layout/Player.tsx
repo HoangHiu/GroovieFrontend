@@ -28,11 +28,8 @@ function Player(
     const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
-        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1TmV3QWNjb3VudCIsImlhdCI6MTc0MDY2Njg1OCwiZXhwIjoxNzQwNzc0ODU4fQ.Sd0qXWsOo6cNsttcmQL3eQuNoCjAWQbOBNXNawj39vwPlOCJaYdYOGD1Lwd9Hymob00r6uX7DtxkMzlx05qAfw";
-
         if (album[songIndex]) {
             axios({
-                headers: { Authorization: "Bearer " + token },
                 url: `http://localhost:8080/v1/song/${album[songIndex].songId}/audio`,
                 method: "get",
             })
