@@ -13,22 +13,39 @@ function AlbumContent(
     currentSongIndex: number
     }
     ) {
+
     const [songs, setSongs] = useState<Song[]>([]);
+    const [album, setAlbum] = useState<{
+        name: string;
+        artistId: string;
+        artistName: string;
+        coverUrl: string;
+    } | null>(null);
 
     useEffect(() => {
-        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1TmV3QWNjb3VudCIsImlhdCI6MTc0MDY2Njg1OCwiZXhwIjoxNzQwNzc0ODU4fQ.Sd0qXWsOo6cNsttcmQL3eQuNoCjAWQbOBNXNawj39vwPlOCJaYdYOGD1Lwd9Hymob00r6uX7DtxkMzlx05qAfw"
+        async function fetchAlbumData() {
+            try {
+                const albumResponse = await axios.get(`http://localhost:8080/v1/album/${albumId}`);
+                const albumData = albumResponse.data.data;
 
-        axios({
-            headers: {
-                Authorization: "Bearer " + token,
-            },
-            url: `http://localhost:8080/v1/album/${albumId}/getSongs`,
-            method: "get",
-        })
-            .then((response) => response.data.data)
-            .then((callResult) => {
-                setSongs(callResult.map((item) => new Song(item.uuid, item.title, "artistId", "artistName")));
-            });
+                const newAlbum = {
+                    name: albumData.title,
+                    artistId: albumData.userDtoOut.uuid,
+                    artistName: albumData.userDtoOut.personalDetailDtoOut.name,
+                    coverUrl: albumData.coverUrl ?? "",
+                };
+                setAlbum(newAlbum);
+
+                const songsResponse = await axios.get(`http://localhost:8080/v1/album/${albumId}/getSongs`);
+                const songsData = songsResponse.data.data;
+
+                setSongs(songsData.map((item: any) => new Song(item.uuid, item.title, newAlbum.artistId, newAlbum.artistName)));
+            } catch (error) {
+                console.error("Error fetching album data:", error);
+            }
+        }
+
+        fetchAlbumData();
     }, [albumId]);
 
     return (
@@ -36,10 +53,10 @@ function AlbumContent(
             <section style={{ padding: "20px" }} className="w-full h-[220px] bg-[var(--color-bas-seconday-1)] flex items-center gap-6">
                 <img className="h-full aspect-square" src="" alt="" />
                 <div className="flex flex-col gap-2">
-                    <p className="text-xs font-semibold text-[var(--color-sc-seconday-2)]">Album type</p>
-                    <h1 className="text-6xl font-bold">Album title</h1>
+                    <p className="text-xs font-semibold text-[var(--color-sc-seconday-2)]">Album</p>
+                    <h1 className="text-6xl font-bold">{album?.name}</h1>
                     <div className="flex gap-3 items-center">
-                        <p className="font-semibold text-sm">Artist name</p>
+                        <p className="font-semibold text-sm">{album?.artistName}</p>
                         <i>|</i>
                         <p className="font-semibold text-sm">Song count</p>
                         <i>|</i>

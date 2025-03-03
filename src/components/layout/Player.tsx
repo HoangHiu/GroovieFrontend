@@ -13,6 +13,8 @@ import skNextIcon from "../../assets/images/player/skip_next.svg";
 import skPreviousIcon from "../../assets/images/player/skip_previous.svg";
 import shuffleIcon from "../../assets/images/player/shuffle.svg";
 import volumeUpIcon from "../../assets/images/player/volume_up.svg";
+import shuffleOnIcon from "../../assets/images/player/shuffle_on.svg";
+import repeatOnIcon from "../../assets/images/player/repeat_on.svg";
 
 function Player(
     { album, songIndex, setSongIndex }:
@@ -20,17 +22,14 @@ function Player(
     const [currentProgress, setCurrentProgress] = useState<number>(0);
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [isLoop, setIsLoop] = useState<boolean>(false);
+    const [isShuffle, setIsShuffle] = useState<boolean>(false);
     const [duration, setDuration] = useState<number>(0);
     const audioRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
-        const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJoaWV1TmV3QWNjb3VudCIsImlhdCI6MTc0MDY2Njg1OCwiZXhwIjoxNzQwNzc0ODU4fQ.Sd0qXWsOo6cNsttcmQL3eQuNoCjAWQbOBNXNawj39vwPlOCJaYdYOGD1Lwd9Hymob00r6uX7DtxkMzlx05qAfw"
-
         if (album[songIndex]) {
             axios({
-                headers: {
-                    Authorization: "Bearer " + token,
-                },
                 url: `http://localhost:8080/v1/song/${album[songIndex].songId}/audio`,
                 method: "get",
             })
@@ -45,7 +44,7 @@ function Player(
         }
     }, [songIndex]);
 
-    // Song progression tracking
+
     useEffect(() => {
         const updateProgress = () => {
             if (audioRef.current && !isSeeking) {
@@ -56,11 +55,22 @@ function Player(
 
         const handleSongEnd = () => {
             if (songIndex < album.length - 1) {
-                setSongIndex(songIndex + 1);
+                playNextSong();
             } else {
-                setSongIndex(0);
+                // Last song reached
+                setSongIndex(0); // Reset to the first song
+                if (audioRef.current) {
+                    audioRef.current.currentTime = 0;
+
+                    if (isLoop) {
+                        setIsPlaying(true);
+                        audioRef.current.play();
+                    } else {
+                        setIsPlaying(false);
+                        audioRef.current.pause();
+                    }
+                }
             }
-            if (audioRef.current){audioRef.current.pause()}
         };
 
         if (audioRef.current) {
@@ -80,13 +90,11 @@ function Player(
     }, [isSeeking]);
 
 
-    // Handle slider change (dragging)
     const handleOnChangeProgress = (value: number[]) => {
         setCurrentProgress(value[0]);
         setIsSeeking(true);
     };
 
-    // Handle slider commit (release)
     const handleOnCommitProgress = () => {
         if (audioRef.current) {
             audioRef.current.currentTime = (currentProgress / 100) * audioRef.current.duration;
@@ -112,12 +120,30 @@ function Player(
         return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     };
 
-    const playNextSong = ()=> {
-        if (songIndex < album.length - 1) {
-            setSongIndex(songIndex + 1);
+    const playNextSong = () => {
+        if (isShuffle) {
+            const randomIndex = Math.floor(Math.random() * album.length);
+            setSongIndex(randomIndex);
         } else {
-            setSongIndex(0);
+            setSongIndex((prevIndex) => (prevIndex < album.length - 1 ? prevIndex + 1 : 0));
         }
+    };
+
+    const playPreviousSong = () => {
+        if (isShuffle) {
+            const randomIndex = Math.floor(Math.random() * album.length);
+            setSongIndex(randomIndex);
+        } else {
+            setSongIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : album.length - 1));
+        }
+    };
+
+    const toggleLoop = () => {
+        setIsLoop((prev) => !prev);
+    };
+
+    const toggleShuffle = ()=> {
+        setIsShuffle(!isShuffle)
     }
 
     return (
@@ -126,11 +152,11 @@ function Player(
 
             {/* Main player functions */}
             <section className="flex">
-                <PlayerBtn icon={repeatIcon} />
-                <PlayerBtn icon={skPreviousIcon} />
+                <PlayerBtn icon={isLoop ? repeatOnIcon : repeatIcon} onClick={toggleLoop} />
+                <PlayerBtn icon={skPreviousIcon} onClick={playPreviousSong} />
                 <PlayerBtn icon={isPlaying ? pauseIcon : playIcon} onClick={togglePlay} />
                 <PlayerBtn icon={skNextIcon} onClick={playNextSong}/>
-                <PlayerBtn icon={shuffleIcon} />
+                <PlayerBtn icon={isShuffle ? shuffleOnIcon : shuffleIcon} onClick={toggleShuffle} />
             </section>
 
             {/* Progress Bar */}
