@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useRef} from "react";
 
 interface propsContext{
     icon: string;
@@ -8,9 +8,6 @@ interface propsContext{
 }
 
 function NavBtn ({ icon, width= "60px", height="60px", onClick = () => {}}: propsContext){
-    const initBackground: string = "var(--color-ic-seconday-1)";
-    const highlightBackground: string = "var(--color-sc-primary-1)";
-
     const btnRef  = useRef<HTMLButtonElement | null>(null);
 
     return<button onClick={onClick} ref={btnRef}

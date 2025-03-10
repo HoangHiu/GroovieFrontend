@@ -1,7 +1,6 @@
 import {useOutletContext, useParams} from "react-router-dom";
 import AlbumContent from "../components/layout/AlbumContent.tsx";
 import Song from "../models/Song.ts";
-import {useEffect} from "react";
 
 type ContextType = {
     setCurrentPlaylist: (playlist: Song[]) => void;
