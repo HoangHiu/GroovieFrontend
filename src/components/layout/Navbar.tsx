@@ -13,30 +13,30 @@ function Navbar({roles} : {roles : string[]}){
     const navigate = useNavigate();
 
     const navItems = [
-        { icon: homeIcon, onClick: () => navigate("/") },
-        { icon: searchIcon, onClick: undefined },
+        { icon: homeIcon, text: "Home", onClick: () => navigate("/") },
+        { icon: searchIcon, text: "Search", onClick: () => navigate("/search") },
     ];
 
     if (roles.length > 0) {
-        navItems.push({ icon: playlistIcon, onClick: undefined });
+        navItems.push({ icon: playlistIcon, text: "My PLaylists", onClick: () => navigate("/playlists/me") });
     }
 
     if (roles.includes("ARTIST")){
-        navItems.push({ icon: albumIcon, onClick: undefined });
+        navItems.push({ icon: albumIcon, text: "My Albums", onClick: () => navigate("/albums/me") });
     }
 
     if (roles.includes("MODERATOR") || roles.includes("ADMIN")) {
-        navItems.push({ icon: systemDataIcon, onClick: undefined });
+        navItems.push({ icon: systemDataIcon, text: "Moderators", onClick: () => navigate("/system-mods") });
     }
 
     if (roles.includes("ADMIN")) {
-        navItems.push({ icon: manModeratorIcon, onClick: undefined });
+        navItems.push({ icon: manModeratorIcon, text: "Admins", onClick: () => navigate("/admins") });
     }
 
     return (
         <div className="flex flex-col pt-8 rounded-lg bg-[var(--color-ic-seconday-1)] p-4">
             {navItems.map((item, index) => (
-                <NavBtn key={index} icon={item.icon} onClick={item.onClick} />
+                <NavBtn key={index} icon={item.icon} text={item.text} onClick={item.onClick} />
             ))}
         </div>
     );
