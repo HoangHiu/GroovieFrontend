@@ -1,6 +1,7 @@
 import CreatePlaylistForm from "../layout/CreatePlaylistForm.tsx";
 import React, { useEffect } from "react";
 import DeletePlaylistForm from "../layout/DeletePlaylistForm.tsx";
+import AddSongToPlaylistForm from "../layout/AddSongToPlaylistForm.tsx";
 
 interface Props {
     isOpen: boolean;
@@ -8,15 +9,19 @@ interface Props {
     formType: string;
     onSuccess: () => void;
     playlistId?: string;
+    songId?: string;
 }
 
-function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId }: Props) {
+function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId, songId }: Props) {
     const [formHeader, setFormHeader] = React.useState("");
 
     useEffect(() => {
         switch (formType) {
             case "createPlaylist":
                 setFormHeader("Create Playlist");
+                break;
+            case "deletePlaylist":
+                setFormHeader("Delete Playlist?");
                 break;
             default:
                 setFormHeader("");
@@ -36,6 +41,12 @@ function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId }: Props
                     setIsOpen(false);
                     onSuccess();
                 }} />;
+            case "addToPlaylist":
+                return <AddSongToPlaylistForm songId={songId}
+                                           onSuccess={() => {
+                                               setIsOpen(false);
+                                               onSuccess();
+                                           }} />;
             default:
                 return null;
         }
@@ -47,7 +58,7 @@ function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId }: Props
             <div style={{ padding: "20px" }}
                  className={"flex flex-col bg-[var(--color-ic-seconday-2)] rounded-lg"}>
                 <div style={{ paddingBottom: "10px", marginBottom: "20px" }}
-                     className={"flex justify-between items-center border-b-2 border-[var(--color-sc-seconday-1)]"}>
+                     className={"flex justify-between items-center border-b-2 border-[var(--color-sc-seconday-1)] min-w-[200px]"}>
                     <h1 className={"text-xl font-semibold"}>{formHeader}</h1>
                     <button style={{ padding: "10px" }}
                             className={"hover:bg-red-500 hover:cursor-pointer rounded-lg"}

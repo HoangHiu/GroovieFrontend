@@ -54,7 +54,7 @@ function DeletePlaylistForm({ playlistId, onSuccess }: Props) {
                 onClick={handleDelete}
                 disabled={isLoading}
             >
-                {isLoading ? "Deleting..." : "Delete Playlist"}
+                {isLoading ? "Deleting..." : "Confirm"}
             </button>
         </div>
     );
