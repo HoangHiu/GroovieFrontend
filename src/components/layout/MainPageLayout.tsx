@@ -65,7 +65,7 @@ const MainPageLayout = () => {
     }
 
     return (
-        <div className="h-full grid grid-rows-[auto_1fr_auto] grid-cols-[auto_minmax(0,1fr)] gap-4">
+        <div className="h-full grid grid-rows-[auto_1fr_auto] grid-cols-[auto_minmax(0,1fr)] gap-4 relative">
             <div style={{padding:'0 10px'}}
                 className="col-span-2 flex w-full bg-[var(--color-ic-seconday-1)] justify-between rounded-lg">
                 <Logo></Logo>
