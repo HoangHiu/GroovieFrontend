@@ -2,6 +2,7 @@ import CreatePlaylistForm from "../layout/CreatePlaylistForm.tsx";
 import React, { useEffect } from "react";
 import DeletePlaylistForm from "../layout/DeletePlaylistForm.tsx";
 import AddSongToPlaylistForm from "../layout/AddSongToPlaylistForm.tsx";
+import CreateSongInAlbumForm from "../layout/CreateSongInAlbumForm.tsx";
 
 interface Props {
     isOpen: boolean;
@@ -10,9 +11,10 @@ interface Props {
     onSuccess: () => void;
     playlistId?: string;
     songId?: string;
+    albumId?: string;
 }
 
-function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId, songId }: Props) {
+function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId, songId, albumId }: Props) {
     const [formHeader, setFormHeader] = React.useState("");
 
     useEffect(() => {
@@ -47,6 +49,12 @@ function FormPopUp({ isOpen, setIsOpen, formType, onSuccess, playlistId, songId 
                                                setIsOpen(false);
                                                onSuccess();
                                            }} />;
+            case "createSong":
+                return <CreateSongInAlbumForm albumId={albumId}
+                                              onSuccess={() => {
+                                                  setIsOpen(false);
+                                                  onSuccess();
+                                              }}/>
             default:
                 return null;
         }

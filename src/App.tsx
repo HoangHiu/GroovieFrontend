@@ -5,6 +5,7 @@ import AlbumPage from "./pages/AlbumPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import PlaylistListPage from "./pages/PlaylistListPage.tsx";
 import PlaylistContentPage from "./pages/PlaylistContentPage.tsx";
+import AlbumListPage from "./pages/AlbumListPage.tsx";
 
 
 
@@ -16,7 +17,8 @@ function App() {
                     <Route path="/" element={<MainPageLayout />}>
                         <Route index element={<Home />} />
                         <Route path="playlists/me" element={<PlaylistListPage />} />
-                        <Route path="album/:id" element={<AlbumPage />} />
+                        <Route path="albums/me" element={<AlbumListPage />} />
+                        <Route path="album/:id/:contentChangeable" element={<AlbumPage />} />
                         <Route path="playlist/:id" element={<PlaylistContentPage />} />
                     </Route>
                 </Routes>

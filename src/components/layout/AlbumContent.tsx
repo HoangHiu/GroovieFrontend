@@ -2,8 +2,7 @@ import Song from "../../models/Song.ts";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import FormPopUp from "../ui/FormPopUp.tsx";
-
-// import AddSongToPlaylistForm from "../layout/AddSongToPlaylistForm.tsx";
+import { useNavigate } from "react-router-dom";
 
 interface Playlist {
     playlistId: string;
@@ -13,16 +12,19 @@ interface Playlist {
 function AlbumContent({
                           albumId,
                           onSelectSong,
-                          currentSongIndex
+                          currentSongIndex,
+                          contentChangeable
                       }: {
     albumId: string;
     onSelectSong: (songIndex: number, songPlaylist: Song[]) => void;
     currentSongIndex: number;
+    contentChangeable: boolean;
 }) {
     const [songs, setSongs] = useState<Song[]>([]);
     const [album, setAlbum] = useState<{ name: string; artistId: string; artistName: string; coverUrl: string } | null>(null);
     const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [formType, setFormType] = useState<'createSong' | 'addToPlaylist' | null>(null);
 
     useEffect(() => {
         async function fetchAlbumData() {
@@ -41,7 +43,7 @@ function AlbumContent({
                 const songsResponse = await axios.get(`http://localhost:8080/v1/album/${albumId}/getSongs`);
                 const songsData = songsResponse.data.data;
 
-                setSongs(songsData.map((item: any) => new Song(item.uuid, item.title, newAlbum.artistId, newAlbum.artistName)));
+                setSongs(songsData.map((item: any) => new Song(item.uuid, item.title, newAlbum.artistId, newAlbum.artistName, item.duration)));
             } catch (error) {
                 console.error("Error fetching album data:", error);
             }
@@ -50,9 +52,20 @@ function AlbumContent({
         fetchAlbumData();
     }, [albumId]);
 
+    const handleAddSongClick = () => {
+        setFormType('createSong');
+        setIsFormOpen(true);
+    };
+
     const handleAddToPlaylistClick = (songId: string) => {
         setSelectedSongId(songId);
+        setFormType('addToPlaylist');
         setIsFormOpen(true);
+    };
+
+    const handleFormSuccess = () => {
+        setIsFormOpen(false);
+        window.location.reload()
     };
 
     return (
@@ -70,7 +83,31 @@ function AlbumContent({
                 </div>
             </section>
 
-            <section style={{ marginTop: "20px" }}>
+            {contentChangeable && (
+                <section style={{ padding: "20px 20px 0px 20px" }} className="flex justify-end px-6 mt-4">
+                    <div className="flex gap-4">
+                        <button style={{ padding: "10px 20px" }}
+                                className="bg-[var(--color-sc-primary-1)] text-white px-4 py-2 rounded transition
+                                hover:bg-[var(--color-bas-primary-3)] hover:cursor-pointer"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    // TODO : edit info
+                                }}>
+                            Edit Info
+                        </button>
+                        <button style={{ padding: "10px 20px" }}
+                                className="bg-[var(--color-sc-primary-1)] text-white px-4 py-2 rounded transition
+                                hover:bg-[var(--color-bas-primary-3)] hover:cursor-pointer"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAddSongClick();
+                                }}>
+                            Add a song
+                        </button>
+                    </div>
+                </section>
+            )}
+            <section style={{ padding: "30px" }}>
                 <table className="table-auto w-full text-left">
                     <thead className="border-b-1">
                     <tr>
@@ -94,7 +131,10 @@ function AlbumContent({
                             <td className="text-center">{index + 1}</td>
                             <td>{song.songName}</td>
                             <td>{song.artistName}</td>
-                            <td>3:45</td>
+                            <td>
+                                {Math.floor(song.duration / 60)}:
+                                {String(song.duration % 60).padStart(2, '0')}
+                            </td>
                             <td className="text-center">
                                 <button
                                     className="opacity-0 group-hover:opacity-100 transition-opacity bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
@@ -112,12 +152,12 @@ function AlbumContent({
                 </table>
             </section>
 
-            {/* Form Popup for Adding Songs */}
             <FormPopUp
                 isOpen={isFormOpen}
                 setIsOpen={setIsFormOpen}
-                formType="addToPlaylist"
-                onSuccess={() => setIsFormOpen(false)}
+                formType={formType}
+                onSuccess={handleFormSuccess}
+                albumId={albumId}
                 songId={selectedSongId}
             />
         </div>

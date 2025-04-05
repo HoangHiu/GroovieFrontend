@@ -9,7 +9,7 @@ interface Props {
     itemCover: string;
     itemArtistName?: string;
     onDelete?: () => void;
-    itemType: "album" | "artist" | "playlist";
+    itemType: "album-true" | "album-false" | "artist" | "playlist";
 }
 
 function BigCardVerti({ itemId, itemName, itemCover, itemArtistName, onDelete, itemType }: Props) {
@@ -19,9 +19,11 @@ function BigCardVerti({ itemId, itemName, itemCover, itemArtistName, onDelete, i
     const navigate = useNavigate();
 
     const handleClick = () => {
-        if (itemType === "album") {
-            navigate(`/album/${itemId}`);
-        } else if (itemType === "artist") {
+        if (itemType === "album-true") {
+            navigate(`/album/${itemId}/true`);
+        } else if (itemType === "album-false") {
+            navigate(`/album/${itemId}/false`);
+        }else if (itemType === "artist") {
             navigate(`/artist/${itemId}`);
         } else if (itemType === "playlist") {
             navigate(`/playlist/${itemId}`);
@@ -51,7 +53,7 @@ function BigCardVerti({ itemId, itemName, itemCover, itemArtistName, onDelete, i
         >
             <img
                 style={{ margin: "0 0 15px 0" }}
-                className={`${itemType === "album" || itemType === "playlist" ? "rounded-sm" : "rounded-full"} w-[150px] h-[150px] bg-gray-400`}
+                className={`${itemType === "album-true" || itemType === "album-false" || itemType === "playlist" ? "rounded-sm" : "rounded-full"} w-[150px] h-[150px] bg-gray-400`}
                 src={imageSrc}
                 alt={itemName}
                 onError={handleOnErrorLoadingImg}

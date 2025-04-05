@@ -13,7 +13,10 @@ function AlbumPage() {
     const { setCurrentPlaylist, setCurrentSongIndex, currentPlaylist, currentSongIndex } =
         useOutletContext<ContextType>();
 
-    const { id } = useParams();
+    const { id, contentChangeable } = useParams<{ id: string; contentChangeable?: string }>();
+
+    const isContentChangeable = contentChangeable === "true";
+
 
     return (
             <AlbumContent
@@ -23,6 +26,7 @@ function AlbumPage() {
                     setCurrentPlaylist(playlist);
                 }}
                 currentSongIndex={currentSongIndex}
+                contentChangeable= {isContentChangeable}
             />
     );
 }
