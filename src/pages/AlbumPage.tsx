@@ -1,5 +1,5 @@
 import {useOutletContext, useParams} from "react-router-dom";
-import AlbumContent from "../components/layout/AlbumContent.tsx";
+import AlbumContent from "../components/layout/content/AlbumContent.tsx";
 import Song from "../models/Song.ts";
 
 type ContextType = {
@@ -13,7 +13,10 @@ function AlbumPage() {
     const { setCurrentPlaylist, setCurrentSongIndex, currentPlaylist, currentSongIndex } =
         useOutletContext<ContextType>();
 
-    const { id } = useParams();
+    const { id, contentChangeable } = useParams<{ id: string; contentChangeable?: string }>();
+
+    const isContentChangeable = contentChangeable === "true";
+
 
     return (
             <AlbumContent
@@ -23,6 +26,7 @@ function AlbumPage() {
                     setCurrentPlaylist(playlist);
                 }}
                 currentSongIndex={currentSongIndex}
+                contentChangeable= {isContentChangeable}
             />
     );
 }

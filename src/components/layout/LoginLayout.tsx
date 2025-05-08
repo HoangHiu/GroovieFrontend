@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 function LoginLayout(){
     const [currentlyLogin, setCurrentlyLogin] = useState<boolean>(true);
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [error, setError] = useState<string | null>(null);
@@ -52,6 +53,7 @@ function LoginLayout(){
                 const response = await axios.post("http://localhost:8080/auth/register", {
                     username,
                     password,
+                    email
                 });
 
                 if (response.data.data) {
@@ -88,6 +90,16 @@ function LoginLayout(){
                                    onChange={(e) => setUsername(e.target.value)} className="w-full border-0 p-2 rounded-md
                                    bg-[var(--color-ic-seconday-1)] text-[var(--color-bas-seconday-3)]"/>
                         </label>
+                        {currentlyLogin ? null :
+                            <label className={"text-[var(--color-sc-seconday-1)]"}>
+                                Email
+                                <input type="text"
+                                       value={email}
+                                       placeholder={"Email"}
+                                       style={{padding: '5px 10px', marginTop: '8px'}}
+                                       onChange={(e) => setEmail(e.target.value)} className="w-full border-0 p-2 rounded-md
+                                   bg-[var(--color-ic-seconday-1)] text-[var(--color-bas-seconday-3)]"/>
+                            </label>}
                         <label className={"text-[var(--color-sc-seconday-1)]"}>
                             Password
                             <input type="password"

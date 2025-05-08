@@ -22,31 +22,25 @@ class CardItem {
 interface propsContext{
     cardContentType: string;
     header: string;
-    apiUrl: string;
+    apiUrl?: string;
 }
 
 function CardListHori(props: propsContext) {
     const [cardList, setCardList] = useState<CardItem[]>([]);
 
-    const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
+    const getAllUrl : string = "http://localhost:8080/v1/album/search?page_number=1&page_size=10"
 
     useEffect(() => {
-            axios({
-                method: "get",
-                url: getAllUrl,
-            })
-                .then((response) => {
-                    return response.data.data.content
-                })
-                .then((callResult) => {
-                    setCardItems(callResult, props.cardContentType)
-                })
-
-    }, [cardList]);
+        axios.get(props.apiUrl ? props.apiUrl : getAllUrl)
+            .then((response) => response.data.data.content)
+            .then((callResult) => {
+                setCardItems(callResult, props.cardContentType);
+            });
+    }, [props.cardContentType]);
 
     function setCardItems(callResult, cardContentType: string){
         switch (cardContentType) {
-            case "album":
+            case "album-false":
                 setCardList(callResult.map(it => new CardItem(
                     it.uuid,
                     it.title,
