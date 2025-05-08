@@ -16,9 +16,15 @@ import volumeUpIcon from "../../assets/images/player/volume_up.svg";
 import shuffleOnIcon from "../../assets/images/player/shuffle_on.svg";
 import repeatOnIcon from "../../assets/images/player/repeat_on.svg";
 
-function Player(
-    { album, songIndex, setSongIndex }:
-    { album:Song[], songIndex: number, setSongIndex:React.Dispatch<React.SetStateAction<number>> }) {
+function Player({
+                    album,
+                    songIndex,
+                    setSongIndex,
+                }: {
+    album: Song[];
+    songIndex: number;
+    setSongIndex: React.Dispatch<React.SetStateAction<number>>;
+}) {
     const [currentProgress, setCurrentProgress] = useState<number>(0);
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -26,69 +32,73 @@ function Player(
     const [isShuffle, setIsShuffle] = useState<boolean>(false);
     const [duration, setDuration] = useState<number>(0);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const [isVolumeSliderOpen, setIsVolumeSliderOpen] = useState(false);
+    const [volume, setVolume] = useState(50);
 
     useEffect(() => {
-        if (album[songIndex]) {
-            axios({
-                url: `http://localhost:8080/v1/song/${album[songIndex].songId}/audio`,
-                method: "get",
-            })
-                .then((response) => response.data.data)
-                .then((songUrl) => {
-                    if (audioRef.current) {
-                        audioRef.current.src = songUrl;
-                        audioRef.current.play();
-                        setIsPlaying(true);
-                    }
-                });
-        }
-    }, [songIndex]);
-
+        if (!album[songIndex]) return;
+        axios
+            .get(`http://localhost:8080/v1/song/${album[songIndex].songId}/audio`)
+            .then((res) => res.data.data)
+            .then((songUrl) => {
+                if (audioRef.current) {
+                    audioRef.current.src = songUrl;
+                    audioRef.current.play();
+                    setIsPlaying(true);
+                }
+            });
+    }, [songIndex, album]);
 
     useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+
         const updateProgress = () => {
-            if (audioRef.current && !isSeeking) {
-                const progress = (audioRef.current.currentTime / audioRef.current.duration) * 100;
-                setCurrentProgress(progress || 0);
+            if (!isSeeking) {
+                const pct = (audio.currentTime / audio.duration) * 100;
+                setCurrentProgress(pct || 0);
             }
         };
 
         const handleSongEnd = () => {
             if (songIndex < album.length - 1) {
-                playNextSong();
+                if (isShuffle) {
+                    setSongIndex(Math.floor(Math.random() * album.length));
+                } else {
+                    setSongIndex((i) => (i < album.length - 1 ? i + 1 : 0));
+                }
             } else {
-                // Last song reached
-                setSongIndex(0); // Reset to the first song
-                if (audioRef.current) {
-                    audioRef.current.currentTime = 0;
-
-                    if (isLoop) {
-                        setIsPlaying(true);
-                        audioRef.current.play();
-                    } else {
-                        setIsPlaying(false);
-                        audioRef.current.pause();
-                    }
+                if (isLoop) {
+                    setSongIndex(0);
+                    audio.play();
+                } else {
+                    setIsPlaying(false);
+                    audio.pause();
                 }
             }
         };
 
-        if (audioRef.current) {
-            audioRef.current.addEventListener("timeupdate", updateProgress);
-            audioRef.current.addEventListener("ended", handleSongEnd);
-            audioRef.current.addEventListener("loadedmetadata", () => {
-                setDuration(audioRef.current?.duration || 0);
-            });
-        }
+        const handleLoaded = () => {
+            setDuration(audio.duration);
+        };
+
+        audio.addEventListener("timeupdate", updateProgress);
+        audio.addEventListener("ended", handleSongEnd);
+        audio.addEventListener("loadedmetadata", handleLoaded);
 
         return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener("timeupdate", updateProgress);
-                audioRef.current.removeEventListener("ended", handleSongEnd);
-            }
+            audio.removeEventListener("timeupdate", updateProgress);
+            audio.removeEventListener("ended", handleSongEnd);
+            audio.removeEventListener("loadedmetadata", handleLoaded);
         };
-    }, [isSeeking]);
-
+    }, [
+        songIndex,
+        album.length,
+        isSeeking,
+        isLoop,
+        isShuffle,
+        setSongIndex,
+    ]);
 
     const handleOnChangeProgress = (value: number[]) => {
         setCurrentProgress(value[0]);
@@ -97,69 +107,63 @@ function Player(
 
     const handleOnCommitProgress = () => {
         if (audioRef.current) {
-            audioRef.current.currentTime = (currentProgress / 100) * audioRef.current.duration;
+            audioRef.current.currentTime =
+                (currentProgress / 100) * audioRef.current.duration;
         }
         setIsSeeking(false);
     };
 
+    const handleVolumeChange = (value: number[]) => {
+        const vol = value[0];
+        setVolume(vol);
+        if (audioRef.current) audioRef.current.volume = vol / 100;
+    };
+
     const togglePlay = () => {
-        if (audioRef.current) {
-            if (isPlaying) {
-                audioRef.current.pause();
-            } else {
-                audioRef.current.play();
-            }
-            setIsPlaying(!isPlaying);
-        }
+        if (!audioRef.current) return;
+        if (isPlaying) audioRef.current.pause();
+        else audioRef.current.play();
+        setIsPlaying(!isPlaying);
     };
 
     const formatTime = (time: number) => {
         if (isNaN(time)) return "0:00";
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        const m = Math.floor(time / 60);
+        const s = Math.floor(time % 60);
+        return `${m}:${s < 10 ? "0" : ""}${s}`;
     };
 
-    const playNextSong = () => {
-        if (isShuffle) {
-            const randomIndex = Math.floor(Math.random() * album.length);
-            setSongIndex(randomIndex);
-        } else {
-            setSongIndex((prevIndex) => (prevIndex < album.length - 1 ? prevIndex + 1 : 0));
-        }
-    };
-
-    const playPreviousSong = () => {
-        if (isShuffle) {
-            const randomIndex = Math.floor(Math.random() * album.length);
-            setSongIndex(randomIndex);
-        } else {
-            setSongIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : album.length - 1));
-        }
-    };
-
-    const toggleLoop = () => {
-        setIsLoop((prev) => !prev);
-    };
-
-    const toggleShuffle = ()=> {
-        setIsShuffle(!isShuffle)
-    }
+    const toggleLoop = () => setIsLoop((l) => !l);
+    const toggleShuffle = () => setIsShuffle((s) => !s);
+    const toggleVolumeSlider = () =>
+        setIsVolumeSliderOpen((o) => !o);
 
     return (
         <div className="p-8 flex items-center w-full bg-[var(--color-bg-primary-2)] h-[60px] rounded-lg border-3 border-[var(--color-bas-primary-2)] gap-8 col-span-2">
-            <audio ref={audioRef} preload="metadata"></audio>
+            <audio ref={audioRef} preload="metadata" />
 
-            {/* Main player functions */}
+            {/* Controls */}
             <section className="flex">
                 <PlayerBtn icon={isLoop ? repeatOnIcon : repeatIcon} onClick={toggleLoop} />
-                <PlayerBtn icon={skPreviousIcon} onClick={playPreviousSong} />
+                <PlayerBtn icon={skPreviousIcon} onClick={() => {
+                    if (isShuffle) {
+                        setSongIndex(Math.floor(Math.random() * album.length));
+                    } else {
+                        setSongIndex((i) => (i > 0 ? i - 1 : album.length - 1));
+                    }
+                }} />
                 <PlayerBtn icon={isPlaying ? pauseIcon : playIcon} onClick={togglePlay} />
-                <PlayerBtn icon={skNextIcon} onClick={playNextSong}/>
+                <PlayerBtn icon={skNextIcon} onClick={() => {
+                    if (isShuffle) {
+                        setSongIndex(Math.floor(Math.random() * album.length));
+                    } else {
+                        setSongIndex((i) => (i < album.length - 1 ? i + 1 : 0));
+                    }
+                }} />
                 <PlayerBtn icon={isShuffle ? shuffleOnIcon : shuffleIcon} onClick={toggleShuffle} />
             </section>
 
-            {/* Progress Bar */}
+            {/* Progress */}
             <section className="flex items-center gap-3 w-[350px]">
                 <p className="text-sm">{formatTime((currentProgress / 100) * duration)}</p>
                 <Slider.Root
@@ -178,13 +182,35 @@ function Player(
                 <p className="text-sm">{formatTime(duration)}</p>
             </section>
 
-            <section>
-                <PlayerBtn icon={volumeUpIcon} />
+            {/* Volume */}
+            <section className="relative">
+                <PlayerBtn icon={volumeUpIcon} onClick={toggleVolumeSlider} />
+                {isVolumeSliderOpen && (
+                    <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-8 h-28 flex justify-center items-center rounded-md shadow-lg z-10">
+                        <Slider.Root
+                            className="relative w-5 h-20 flex justify-center items-center"
+                            orientation="vertical"
+                            value={[volume]}
+                            onValueChange={handleVolumeChange}
+                            max={100}
+                            step={1}
+                        >
+                            <Slider.Track className="relative w-1 h-full bg-gray-700 rounded-full">
+                                <Slider.Range className="absolute bottom-0 w-full bg-white rounded-full" />
+                            </Slider.Track>
+                            <Slider.Thumb className={styles.SliderThumb} />
+                        </Slider.Root>
+                    </div>
+                )}
             </section>
 
+            {/* Now playing info */}
             <section>
                 {album[songIndex] ? (
-                    <SongCardHoriz title={album[songIndex].songName} authorName={album[songIndex].artistName} />
+                    <SongCardHoriz
+                        title={album[songIndex].songName}
+                        authorName={album[songIndex].artistName}
+                    />
                 ) : (
                     <p className="text-gray-500">Select a song to play</p>
                 )}

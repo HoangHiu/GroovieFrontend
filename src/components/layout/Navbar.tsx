@@ -5,7 +5,6 @@ import searchIcon from "../../assets/images/nav/search.svg";
 import playlistIcon from "../../assets/images/nav/playlists.svg";
 import albumIcon from "../../assets/images/nav/album.svg";
 import systemDataIcon from "../../assets/images/nav/dataset.svg";
-import manModeratorIcon from "../../assets/images/nav/manModerator.svg";
 
 import {useNavigate} from "react-router-dom";
 
@@ -26,11 +25,7 @@ function Navbar({roles} : {roles : string[]}){
     }
 
     if (roles.includes("MODERATOR") || roles.includes("ADMIN")) {
-        navItems.push({ icon: systemDataIcon, text: "Moderators", onClick: () => navigate("/system-mods") });
-    }
-
-    if (roles.includes("ADMIN")) {
-        navItems.push({ icon: manModeratorIcon, text: "Admins", onClick: () => navigate("/admins") });
+        navItems.push({ icon: systemDataIcon, text: "System Data", onClick: () => navigate("/system-data") });
     }
 
     return (

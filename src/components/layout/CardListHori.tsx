@@ -22,16 +22,16 @@ class CardItem {
 interface propsContext{
     cardContentType: string;
     header: string;
-    apiUrl: string;
+    apiUrl?: string;
 }
 
 function CardListHori(props: propsContext) {
     const [cardList, setCardList] = useState<CardItem[]>([]);
 
-    const getAllUrl : string = "http://localhost:8080/v1/album?page_number=0&page_size=100"
+    const getAllUrl : string = "http://localhost:8080/v1/album/search?page_number=1&page_size=10"
 
     useEffect(() => {
-        axios.get(getAllUrl)
+        axios.get(props.apiUrl ? props.apiUrl : getAllUrl)
             .then((response) => response.data.data.content)
             .then((callResult) => {
                 setCardItems(callResult, props.cardContentType);

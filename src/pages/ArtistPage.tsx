@@ -1,6 +1,7 @@
 import Song from "../models/Song.ts";
 import {useOutletContext, useParams} from "react-router-dom";
-import PlaylistContent from "../components/layout/content/PlaylistContent.tsx";
+import {useEffect} from "react";
+import ArtistPageContent from "../components/layout/content/ArtistPageContent.tsx";
 
 type ContextType = {
     setCurrentPlaylist: (playlist: Song[]) => void;
@@ -9,22 +10,25 @@ type ContextType = {
     currentSongIndex: number;
 };
 
-function PlaylistContentPage() {
+function ArtistPage(){
     const { setCurrentPlaylist, setCurrentSongIndex, currentPlaylist, currentSongIndex } =
         useOutletContext<ContextType>();
 
     const { id } = useParams();
 
-    return (
-        <PlaylistContent
-            playlistId={id!}
+    useEffect(() => {
+    }, [currentPlaylist, currentSongIndex]);
+
+    return(
+        <ArtistPageContent
+            artistId={id!}
             onSelectSong={(index, playlist) => {
                 setCurrentSongIndex(index);
                 setCurrentPlaylist(playlist);
             }}
             currentSongIndex={currentSongIndex}
         />
-    );
+    )
 }
 
-export default PlaylistContentPage;
+export default ArtistPage

@@ -1,7 +1,7 @@
 import {useRef} from "react";
 
 interface propsContext{
-    icon: string;
+    icon?: string;
     width?: string|number;
     height?: string|number;
     text?: string;
@@ -18,7 +18,7 @@ function NavBtn ({ icon, text, onClick = () => {}}: propsContext){
                   transition delay-0 duration-300
                   font-bold text-xl"
                   style={{padding:'15px'}}>
-        <img className={"w-[35px]"} src={icon} alt=""/>
+        {icon != undefined ? <img className={"w-[35px]"} src={icon} alt=""/> : null}
         {text}
     </button>
 }

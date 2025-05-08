@@ -1,5 +1,5 @@
 import {useOutletContext, useParams} from "react-router-dom";
-import AlbumContent from "../components/layout/AlbumContent.tsx";
+import AlbumContent from "../components/layout/content/AlbumContent.tsx";
 import Song from "../models/Song.ts";
 
 type ContextType = {

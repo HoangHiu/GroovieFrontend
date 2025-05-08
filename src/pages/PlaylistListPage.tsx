@@ -1,16 +1,18 @@
 import BigCardVerti from "../components/ui/BigCardVerti.tsx";
 import FormPopUp from "../components/ui/FormPopUp.tsx";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Playlist {
     id: string;
     name: string;
+    coverUrls: string[]
 }
 
 function PlaylistListPage() {
     const [isOpen, setIsOpen] = useState(false);
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const fetchPlaylists = async () => {
         const token = localStorage.getItem("token");
@@ -31,6 +33,7 @@ function PlaylistListPage() {
                 const fetchedPlaylists = response.data.data.map((playlist: any) => ({
                     id: playlist.uuid,
                     name: playlist.name,
+                    coverUrls: playlist.coverUrls,
                 }));
                 setPlaylists(fetchedPlaylists);
             } else {
@@ -45,6 +48,10 @@ function PlaylistListPage() {
         fetchPlaylists();
     }, []);
 
+    const filteredPlaylists = playlists.filter(playlist =>
+        playlist.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div style={{ padding: "10px" }}
              className={"flex flex-col gap-7 bg-[var(--color-ic-seconday-1)] rounded-lg overflow-auto"}>
@@ -52,9 +59,14 @@ function PlaylistListPage() {
                      className={"flex justify-between items-center"}>
                 <h1 className={"text-2xl font-black"}>Your Playlists</h1>
                 <div className={"flex gap-4"}>
-                    <input style={{ padding: '6px' }}
-                           className={"border-[var(--color-bas-seconday-2)] border-1 border-solid rounded-md"}
-                           type="text" placeholder={"Find your playlist"} />
+                    <input
+                        style={{ padding: '6px' }}
+                        className={"border-[var(--color-bas-seconday-2)] border-1 border-solid rounded-md"}
+                        type="text"
+                        placeholder={"Find your playlist"}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                     <button onClick={() => setIsOpen(prev => !prev)}
                             style={{ padding: "10px 20px" }}
                             className={"flex items-center rounded-lg bg-[var(--color-sc-primary-1)] " +
@@ -64,17 +76,18 @@ function PlaylistListPage() {
                 </div>
             </section>
             <section className={"w-full flex flex-wrap"}>
-                {playlists.map(playlist => (
+                {filteredPlaylists.map(playlist => (
                     <BigCardVerti
                         key={playlist.id}
                         itemId={playlist.id}
                         itemName={playlist.name}
-                        itemCover={"/default-cover.jpg"}
+                        itemCover={playlist.coverUrls}
                         itemType={"playlist"}
-                        onDelete={fetchPlaylists}/>
+                        onDelete={fetchPlaylists}
+                    />
                 ))}
             </section>
-            <FormPopUp isOpen={isOpen} setIsOpen={setIsOpen} formType={"createPlaylist"} onSuccess={fetchPlaylists}/>
+            <FormPopUp isOpen={isOpen} setIsOpen={setIsOpen} formType={"createPlaylist"} onSuccess={fetchPlaylists} />
         </div>
     );
 }
