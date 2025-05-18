@@ -17,7 +17,7 @@ function AddSongToPlaylistForm({ songId, onSuccess }: Props) {
             try {
                 const token = localStorage.getItem("token");
                 if (!token) {
-                    setError("No authentication token found.");
+                    setError("User not logged in!!");
                     return;
                 }
 

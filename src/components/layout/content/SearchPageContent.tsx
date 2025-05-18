@@ -151,7 +151,7 @@ function SearchPageContent({
                             <li
                                 onClick={() => onSelectSong(0, [song])}
                                 key={song.songId}
-                                className="flex items-center gap-3 h-[50px] cursor-pointer hover:bg-gray-100"
+                                className="transition duration-300 ease-in-out flex items-center gap-3 h-[50px] cursor-pointer hover:bg-[var(--color-bas-seconday-1)] rounded-lg truncate max-w-[400px]"
                             >
                                 <img
                                     src={song.albumCover || imgPlaceholder}
@@ -162,8 +162,8 @@ function SearchPageContent({
                                     className="aspect-square h-full rounded-lg"
                                 />
                                 <div>
-                                    <h1 className="font-semibold">{song.songName}</h1>
-                                    <span className="text-sm text-gray-600">
+                                    <h1 className=" font-semibold">{song.songName}</h1>
+                                    <span className="text-sm text-gray-400">
                                         {song.artistName || "Unknown Artist"}
                                     </span>
                                 </div>
@@ -171,19 +171,17 @@ function SearchPageContent({
                         ))}
                     </ul>
 
-                    {/* Load More Button for Songs */}
                     {hasMoreSongs && !loadingSongs && searchTerm !== "" && (
                         <div className="text-center py-4">
-                            <button
+                            <button style={{padding: "10px 15px"}}
                                 onClick={loadMoreSongs}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="px-4 py-2 bg-[var(--color-bas-seconday-3)] hover:cursor-pointer text-white rounded-lg hover:bg-[var(--color-bas-seconday-3)] focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 Load More
                             </button>
                         </div>
                     )}
 
-                    {/* Loading Indicator for Songs */}
                     {loadingSongs && (
                         <div className="text-center py-2 text-sm text-gray-400">
                             Loading more...
@@ -210,19 +208,17 @@ function SearchPageContent({
                             ))}
                         </div>
 
-                        {/* Load More Button for Albums */}
                         {hasMoreAlbums && !loadingAlbums && searchTerm !== "" && (
-                            <div className="text-center py-4">
-                                <button
+                            <div style={{padding: "10px 15px"}} className="text-center py-4">
+                                <button style={{padding: "10px 15px"}}
                                     onClick={loadMoreAlbums}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-4 py-2 bg-[var(--color-bas-seconday-3)] hover:cursor-pointer text-white rounded-lg bg-[var(--color-bas-seconday-3)] focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     Load More
                                 </button>
                             </div>
                         )}
 
-                        {/* Loading Indicator for Albums */}
                         {loadingAlbums && (
                             <div className="text-center py-2 text-sm text-gray-400">
                                 Loading more...
@@ -249,10 +245,10 @@ function SearchPageContent({
                         </div>
 
                         {hasMoreArtists && !loadingArtists && searchTerm !== "" && (
-                            <div className="text-center py-4">
+                            <div style={{padding: "10px 15px"}} className="text-center py-4">
                                 <button
                                     onClick={loadMoreArtists}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-4 py-2 bg-[var(--color-bas-seconday-3)] hover:cursor-pointer text-white rounded-lg bg-[var(--color-bas-seconday-3)] focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     Load More
                                 </button>
